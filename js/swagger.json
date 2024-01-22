@@ -1,0 +1,255 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "description": "<p>API de démo</p><p>Données <strong>simulées</strong></p>",
+        "version": "1.0.0",
+        "title": "API Démo"
+    },
+    "servers": [
+        {
+            "url": "https://demo.server"
+        },
+        {
+            "url": "https://test.server"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Utilisateurs",
+            "description": "Tout ce qui concerne les utilisateurs"
+        },
+        {
+            "name": "Article",
+            "description": "Tout ce qui concerne les articles"
+        }
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Obtenir la liste des utilisateurs",
+                "operationId": "getUsers",
+                "responses": {
+                    "200": {
+                        "description": "Renvoie une collection d'utilisateurs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArrayOfUtilisateurs"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Renvoie une erreur, aucun élément trouvé"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Récupère 1 utilisateur",
+                "description": "Récupère 1 utilisateur selon son ID",
+                "operationId": "getUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type" : "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Renvoie un utilisateur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Utilisateurs"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Renvoie une erreur, aucun élément trouvé"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Utilisateurs"
+                ]
+            }
+        },
+        "/posts": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Récupère la liste des articles",
+                "description": "<p>Voir la liste complète des articles de l'API</p><p>Aute texte</p>",
+                "operationId": "getPosts",
+                "responses": {
+                    "200": {
+                        "description": "Renvoie une collection d'article",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArrayOfArticles"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Renvoie une erreur, aucun élément trouvé"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Créer un article",
+                "description": "Créer un article en donnant les informations nécessaires",
+                "operationId": "addPost",
+                "requestBody": {
+                    "description": "Contenue complet d'un article",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "featuredImage": {
+                                        "type": "string"
+                                    },
+                                    "user": {
+                                        "type": "string",
+                                        "format": "iri-reference",
+                                        "default": "/users/{id}"
+                                    }
+                                },
+                                "required" : [
+                                    "title",
+                                    "content",
+                                    "user"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "Article créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"#/components/schemas/Articles"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Utilisateurs": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    }
+                },
+                "example": 
+                    {
+                        "id": 1,
+                        "username": "MikePayne",
+                        "email": "mike.payne@example.com"
+                    }
+                                  
+            },
+            "ArrayOfUtilisateurs": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Utilisateurs"
+                },
+                "example": [
+                    {
+                        "id": 1,
+                        "username": "MikePayne",
+                        "email": "mike.payne@example.com"
+                    },
+                    {
+                        "id": 2,
+                        "username": "DaveLopper",
+                        "email": "daveLopper@example.com"
+                    }
+                ]
+            },
+            "Articles": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "featuredImage": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "default": "/users/{id}"
+                    }
+                }                
+            },
+            "ArrayOfArticles": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Articles"
+                },
+                "example": [
+                    {
+                        "id": 1,
+                        "content": "I'm so happy with the quality of this post !",
+                        "featuredImage": "test.png",
+                        "user": "/users/1"
+                    },
+                    {
+                        "id": 2,
+                        "content": "This post is really a good piece of work !",
+                        "featuredImage": "demo.png",
+                        "user": "/api/users/4"
+                    }
+                ]
+            }
+        }
+    }
+}
